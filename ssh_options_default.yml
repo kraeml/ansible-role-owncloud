@@ -1,5 +1,0 @@
-:port: 22
-:paranoid: false
-#:user: "youre_name"
-#:keys: ["/path/to/private_key"]
-#:passphrase: "yourpassphrase"
