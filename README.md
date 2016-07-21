@@ -1,7 +1,8 @@
 owncloud
 =========
 
-[![Build Status develop on kraeml](https://travis-ci.org/kraeml/ansible-role-owncloud.svg?branch=develop)](https://travis-ci.org/kraeml/ansible-role-owncloud.svg?branch=develop)
+On kraeml/develop: [![Build Status develop on kraeml](https://travis-ci.org/kraeml/ansible-role-owncloud.svg?branch=develop)](https://travis-ci.org/kraeml/ansible-role-owncloud.svg?branch=develop)
+
 Ansible roles for owncloud server installation, testing and general happiness.
 
 Requirements
