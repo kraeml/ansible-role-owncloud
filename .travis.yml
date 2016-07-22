@@ -47,8 +47,8 @@ script:
 
     # Some MySQL debugging (show all the logs).
   - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -lah /var/log
-  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql/error.log || true
-  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql.err || true
+  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql/error.log
+  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql.err
 
   # Check to make sure we can connect to MySQL via Unix socket.
   - >
