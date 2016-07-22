@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+
+  roles:
+      - angstwad.docker_ubuntu
+
+  tasks:
+  - name: Install requirements for role_under_test
+    command: ansible-galaxy install -r /home/vagrant/role_under_test/tests/requirements.yml
