@@ -179,3 +179,4 @@ galaxy_info:
 
 dependencies:
   - { role: geerlingguy.apache }
+  - { role: geerlingguy.mysql }
