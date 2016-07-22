@@ -2,3 +2,4 @@ _serverspec_result.csv
 .vagrant/
 _platforms.yml
 .directory
+playbook.retry
