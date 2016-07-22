@@ -3,3 +3,4 @@ _serverspec_result.csv
 _platforms.yml
 .directory
 playbook.retry
+test.retry
