@@ -42,7 +42,8 @@ script:
   # Test role.
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
-  # TODO: Test if webserver is working.
+  # Test if webserver is working.
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost'
 
   # Test role idempotence.
   - >
