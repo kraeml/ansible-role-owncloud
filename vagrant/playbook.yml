@@ -55,6 +55,8 @@
       - kitchen-vagrant
       - kitchen-ansible
       - kitchen-docker
+      - bundler
+      - travis
 
   - name: Link to local playbook
     file:

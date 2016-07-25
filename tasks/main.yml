@@ -14,6 +14,7 @@
   apt_key:
     url: http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04/Release.key
     state: present
+
 - name: Get owncloud repositories
   apt_repository:
     repo: 'deb http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04 /'
@@ -26,3 +27,4 @@
     name: owncloud
     state: latest
     update_cache: yes
+  notify: apache_restart
