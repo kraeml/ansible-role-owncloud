@@ -1,12 +1,28 @@
 ---
 # tasks file for owncloud
+- name: Ensure mysld is installed
+  command: which mysqld
+  ignore_errors: true
+  register: mysqld_installed
+
+- name: Install mysql
+  apt:
+    name: mysql-server
+  when: mysqld_installed.rc != 0
+
 - name: Get owncloud key
   apt_key:
     url: http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04/Release.key
     state: present
 - name: Get owncloud repositories
   apt_repository:
-    repo: 'deb http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04'
+    repo: 'deb http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04 /'
     update_cache: yes
     state: present
     filename: owncloud
+
+- name: Install owncloud
+  apt:
+    name: owncloud
+    state: latest
+    update_cache: yes
