@@ -52,7 +52,7 @@ script:
   - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql.err || true
 
   # Check to make sure we can connect to MySQL via Unix socket.
-   - >
+  - >
     sudo docker exec "$(cat ${container_id})" mysql -u root -proot -e 'show databases;'
     | grep 'information_schema'
     && (echo 'MySQL running normally' && exit 0)
