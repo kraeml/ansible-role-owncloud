@@ -1,2 +1,12 @@
 ---
 # tasks file for owncloud
+- name: Get owncloud key
+  apt_key:
+    url: http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04/Release.key
+    state: present
+- name: Get owncloud repositories
+  apt_repository:
+    repo: 'deb http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04'
+    update_cache: yes
+    state: present
+    filename: owncloud
