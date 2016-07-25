@@ -1,2 +1,7 @@
 ---
 # defaults file for owncloud
+# Set to yes to install mysql via geerling.mysql
+mysql_install: yes
+
+# Set to yes to install apache via geerling.apache
+apache_install: yes
