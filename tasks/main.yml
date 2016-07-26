@@ -1,7 +1,7 @@
 ---
 # Include variables and define needed variables.
 - name: Include OS-specific variables.
-  include_vars: "{{ ansible_lsb }}.yml"
+  include_vars: "{{ ansible_lsb.codename }}.yml"
 
 # tasks file for owncloud
 - name: Ensure mysld is installed
