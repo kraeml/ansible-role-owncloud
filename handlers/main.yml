@@ -5,3 +5,9 @@
     name: apache2
     enabled: yes
     state: restarted
+
+- name: mysql_running
+  service:
+    name: mysql
+    enabled: yes
+    state: running
