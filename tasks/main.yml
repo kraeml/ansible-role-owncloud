@@ -4,6 +4,7 @@
   command: which mysqld
   ignore_errors: true
   register: mysqld_installed
+  changed_when: "mysqld_installed.rc != 0"
 
 - name: Install mysql
   apt:
