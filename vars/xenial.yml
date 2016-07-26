@@ -1,0 +1,4 @@
+---
+# vars file for owncloud
+key: {{ owncloud_key_ubuntu_1604 }}
+dep: {{ owncloud_deb_ubuntu_1604 }}

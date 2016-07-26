@@ -1,7 +1,7 @@
 ---
 # defaults file for owncloud
-# Set to yes to install mysql via geerling.mysql
-mysql_install: yes
+owncloud_key_ubuntu_1404: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key'
+owncloud_deb_ubuntu_1404: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /'
 
-# Set to yes to install apache via geerling.apache
-apache_install: yes
+owncloud_key_ubuntu_1604: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key'
+owncloud_deb_ubuntu_1604: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /'
