@@ -9,12 +9,13 @@
   apt:
     name: mysql-server
   when: mysqld_installed.rc != 0
+  notify: mysql_running
 
 - name: Get owncloud key
   apt_key:
     url: http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04/Release.key
     state: present
-  notify: mysql_restart
+
 
 - name: Get owncloud repositories
   apt_repository:
