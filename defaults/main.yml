@@ -1,7 +1,2 @@
 ---
 # defaults file for owncloud
-owncloud_key_ubuntu_1404: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key'
-owncloud_deb_ubuntu_1404: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /'
-
-owncloud_key_ubuntu_1604: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key'
-owncloud_deb_ubuntu_1604: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /'

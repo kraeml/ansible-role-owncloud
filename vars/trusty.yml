@@ -1,4 +1,4 @@
 ---
 # vars file for owncloud
-key: {{ owncloud_key_ubuntu_1404 }}
-dep: {{ owncloud_deb_ubuntu_1404 }}
+key: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key'
+dep: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /'
