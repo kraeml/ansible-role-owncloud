@@ -23,7 +23,7 @@
   apt_key:
     url: "{{ key }}"
     state: present
-  when: ansible_distribution_release != 'trusty'
+  when: "ansible_distribution_release != 'trusty'"
 
 - name: Get owncloud key trusty Workaround
   shell: wget -nv https://download.owncloud.org/download/repositories/stable/Ubuntu_14.10/Release.key -O Release.key && apt-key add - < Release.key
