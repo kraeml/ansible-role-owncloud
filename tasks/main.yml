@@ -1,4 +1,8 @@
 ---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_distribution_release }}.yml"
+
 # tasks file for owncloud
 - name: Ensure mysld is installed
   command: which mysqld
@@ -14,13 +18,12 @@
 
 - name: Get owncloud key
   apt_key:
-    url: http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04/Release.key
+    url: "{{ key }}"
     state: present
-
 
 - name: Get owncloud repositories
   apt_repository:
-    repo: 'deb http://download.owncloud.org/download/repositories/ce:/9.0/Ubuntu_14.04 /'
+    repo: '{{ deb }}'
     update_cache: yes
     state: present
     filename: owncloud

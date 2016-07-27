@@ -18,7 +18,7 @@
   - name: Create inventory file
     template:
       src: ./inventory
-      dest: /etc/ansible/inventory
+      dest: /etc/ansible/hosts
 
   - name: Git clone travis-build
     become_user: vagrant
