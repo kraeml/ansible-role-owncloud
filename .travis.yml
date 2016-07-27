@@ -15,10 +15,10 @@ env:
     init: /lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     playbook: test.yml
-  - distribution: ubuntu
-    version: 14.04
-    init: /sbin/init
-    run_opts: ""
+#  - distribution: ubuntu
+#    version: 14.04
+#    init: /sbin/init
+#    run_opts: ""
 # Not Ending on travis
 #  - distribution: ubuntu
 #    version: 12.04
@@ -29,6 +29,8 @@ services:
   - docker
 
 before_install:
+  # Install serverspec
+  - 'sudo gem install rake serverspec'
   # Pull container
   - 'sudo docker pull ${distribution}:${version}'
   # Customize container
@@ -49,7 +51,7 @@ script:
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
   # Test if webserver is working.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
 
   # Some MySQL debugging (show all the logs).
   - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -lah /var/log
