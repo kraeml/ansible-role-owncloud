@@ -1,7 +1,7 @@
 ---
 sudo: required
 dist: trusty
-language: ruby
+language: python
 
 env:
 #  - distribution: centos
@@ -30,13 +30,10 @@ env:
 services:
   - docker
 
-before_install:
-  - sudo apt-get update && sudo apt-get install -y python-pip;
-  - sudo pip install --upgrade urllib3[secure]
-  - sudo pip install ansible;
-  - ansible --version
-  - ansible -i vagrant/local-play vagrant/playbook.yml;
+install:
+  - pip install ansible
 
+before_install:
   # Install serverspec
   #- 'sudo gem install rake serverspec'
   # Pull container
@@ -45,6 +42,8 @@ before_install:
   - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 script:
+  - ansible --version
+  - ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
   - container_id=$(mktemp)
   # Run container in detached state
   - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
