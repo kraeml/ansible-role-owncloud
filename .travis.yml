@@ -31,8 +31,13 @@ services:
   - docker
 
 before_install:
+  - >
+    sudo apt-get update && sudo apt-get install python-pip
+    sudo pip install ansible
+    sudo ansible -i vagrant/local-play vagrant/playbook.yml
+
   # Install serverspec
-  - 'sudo gem install rake serverspec'
+  #- 'sudo gem install rake serverspec'
   # Pull container
   - 'sudo docker pull ${distribution}:${version}'
   # Customize container
