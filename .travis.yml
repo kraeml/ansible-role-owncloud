@@ -32,7 +32,7 @@ services:
 
 before_install:
   - >
-    sudo apt-get update && sudo apt-get install python-pip;
+    sudo apt-get update && sudo apt-get install -y python-pip;
     sudo pip install ansible;
     sudo ansible -i vagrant/local-play vagrant/playbook.yml;
 
