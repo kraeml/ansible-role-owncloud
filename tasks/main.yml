@@ -3,6 +3,9 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_distribution_release }}.yml"
 
+- include: setup-trusty.yml
+  when: ansible_distribution_release == 'Debian'
+
 # tasks file for owncloud
 - name: Ensure mysld is installed
   command: which mysqld
