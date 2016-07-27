@@ -57,6 +57,7 @@
       - kitchen-docker
       - bundler
       - travis
+      - docker-api
 
   - name: Link to local playbook
     file:

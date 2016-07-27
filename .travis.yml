@@ -33,8 +33,9 @@ services:
 before_install:
   - >
     sudo apt-get update && sudo apt-get install -y python-pip;
+    sudo pip install --upgrade urllib3[secure]
     sudo pip install ansible;
-    sudo ansible -i vagrant/local-play vagrant/playbook.yml;
+    ansible -i vagrant/local-play vagrant/playbook.yml;
 
   # Install serverspec
   #- 'sudo gem install rake serverspec'
