@@ -46,6 +46,8 @@ before_script:
   - id
   - ansible --version
   - ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
+  - ls -lisad ~/.g*
+  - echo $PATH
   - serverspec-runner --help
 
 script:
