@@ -46,6 +46,7 @@ before_script:
   - id
   - ansible --version
   - ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
+  - ls ~/.gem/ruby/2.3.0/bin
   - export PATH=/home/travis/.gem/ruby/2.3.0/bin:$PATH
   - echo $PATH
   - serverspec-runner --help
