@@ -42,7 +42,7 @@
       name: "{{item}}"
 
     with_items:
-      - ubuntu:latest
+      - ubuntu:16.04
       - owncloud/ubuntu:latest
 
 
