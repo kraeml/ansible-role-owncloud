@@ -14,11 +14,13 @@
   - name: Set fact user vagrant
     set_fact:
       __user_id: vagrant
+      __user_dir: /home/vagrant
     when: vagrant_id.rc == 0
 
   - name: Set fact user
     set_fact:
       __user_id: "{{ ansible_user_id }}"
+      __user_dir: "{{ ansible_user_dir }}"
     when: vagrant_id.rc != 0
 
   - debug: msg="__user_id has value {{ __user_id }}"
@@ -57,8 +59,8 @@
 
   - name: Setup path for gem
     lineinfile:
-      dest: "/home/{{__user_id}}/.bashrc"
-      line: export PATH="/home/{{__user_id}}/.gem/ruby/2.3.0/bin:$PATH"
+      dest: "{{__user_dir}}/.bashrc"
+      line: export PATH="{{__user_dir}}/.gem/ruby/2.3.0/bin:$PATH"
       state: present
 
   - name: Install serverspec etc.
@@ -80,14 +82,14 @@
   - name: Link to local playbook
     file:
       src: /vagrant/local-play
-      path: "/home/{{__user_id}}/local-play"
+      path: "{{__user_dir}}/local-play"
       state: link
     when: __user_id == "vagrant"
 
   - name: Install required roles
-    command: ansible-galaxy install -r "/home/{{__user_id}}/local-play/requirements.yml"
+    command: ansible-galaxy install -r "{{__user_dir}}/local-play/requirements.yml"
     when: __user_id == "vagrant"
 
   - name: Play local playbook
-    command: ansible-playbook -i /home/{{__user_id}}/local-play/inventory /home/{{__user_id}}/local-play/playbook.yml
+    command: ansible-playbook -i {{__user_dir}}/local-play/inventory /home/{{__user_id}}/local-play/playbook.yml
     when: __user_id == "vagrant"
