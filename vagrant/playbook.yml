@@ -45,6 +45,7 @@
     - git
     - vim
     - htop
+    - tree
 
   - name: Setup git/gem for user
     copy:
