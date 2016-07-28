@@ -41,7 +41,7 @@ before_install:
 
 install:
   # - sudo pip install ansible
-  - sudo gem install serverspec serverspec-runner rake docker-api
+  - gem install --user serverspec serverspec-runner rake docker-api
 
 before_script:
   #- id
