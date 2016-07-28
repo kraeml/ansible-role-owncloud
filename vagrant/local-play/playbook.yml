@@ -9,6 +9,12 @@
   #- name: Install requirements for role_under_test
   #  command: ansible-galaxy install -r /home/vagrant/role_under_test/tests/requirements.yml
 
+  - name: user vagrant in group docker
+    user:
+      append: yes
+      groups: docker
+      name: vagrant
+
   - name: Create link role_under_test
     file:
       src: /home/vagrant/role_under_test
@@ -20,27 +26,47 @@
       src: ./inventory
       dest: /etc/ansible/hosts
 
-  - name: Git clone travis-build
-    become_user: vagrant
-    git:
-      dest: /home/vagrant/travis-build
-      repo: https://github.com/travis-ci/travis-build.git
+  - name: Install local gem packages
+    become_user: "vagrant"
+    gem:
+      name: "{{item}}"
+      state: latest
+      user_install: yes
+    with_items:
+      - bundle
+      - bundler
+      - travis
 
-  - name: Create directory ~/.travis
-    become_user: vagrant
-    file:
-      dest: /home/vagrant/.travis
-      state: directory
+  - name: Pull docker images
+    docker_image:
+      name: "{{item}}"
 
-  - name: Make travis-build link
-    become_user: vagrant
-    file:
-      src: /home/vagrant/travis-build
-      dest: /home/vagrant/.travis/travis-build
-      state: link
+    with_items:
+      - ubuntu:16.04
+      - owncloud/ubuntu:latest
 
-  - name: Install travis-build with bundler
-    become_user: vagrant
-    bundler:
-      state: present
-      gemfile: /home/vagrant/travis-build/Gemfile
+
+#  - name: Git clone travis-build
+#    become_user: vagrant
+#    git:
+#      dest: /home/vagrant/travis-build
+#      repo: https://github.com/travis-ci/travis-build.git
+
+#  - name: Create directory ~/.travis
+#    become_user: vagrant
+#    file:
+#      dest: /home/vagrant/.travis
+#      state: directory
+
+#  - name: Make travis-build link
+#    become_user: vagrant
+#    file:
+#      src: /home/vagrant/travis-build
+#      dest: /home/vagrant/.travis/travis-build
+#      state: link
+
+#  - name: Install travis-build with bundler
+#    become_user: vagrant
+#    bundler:
+#      state: present
+#      gemfile: /home/vagrant/travis-build/Gemfile

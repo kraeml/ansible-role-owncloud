@@ -2,6 +2,29 @@
 - hosts: all
   become: true
 
+  pre_tasks:
+  - debug: msg="Run this playbook only for testing proposal"
+
+  - name: Looking for user Vagrant
+    command: id vagrant
+    register: vagrant_id
+    ignore_errors: yes
+    changed_when: False
+
+  - name: Set fact user vagrant
+    set_fact:
+      __user_id: vagrant
+      __user_dir: /home/vagrant
+    when: vagrant_id.rc == 0
+
+  - name: Set fact user
+    set_fact:
+      __user_id: travis
+      __user_dir: /home/travis
+    when: vagrant_id.rc != 0
+
+  - debug: msg="__user_id has value {{ __user_id }}"
+
   tasks:
   - name: Repositories for ruby, git, virtualbox
     apt_repository:
@@ -22,13 +45,14 @@
     - git
     - vim
     - htop
+    - tree
 
-  - name: Setup git/gem for user vagrant
+  - name: Setup git/gem for user
     copy:
       src: "{{item}}"
-      dest: /home/vagrant/.{{item}}
-      owner: vagrant
-      group: vagrant
+      dest: "{{__user_dir}}/.{{item}}"
+      owner: "{{ __user_id }}"
+      group: "{{ __user_id }}"
       mode: u=rw,g=rw,o=r
     with_items:
     - gitconfig
@@ -36,36 +60,37 @@
 
   - name: Setup path for gem
     lineinfile:
-      dest: /home/vagrant/.bashrc
-      line: export PATH=/home/vagrant/.gem/ruby/2.3.0/bin:$PATH
+      dest: "{{__user_dir}}/.bashrc"
+      line: export PATH="{{__user_dir}}/.gem/ruby/2.3.0/bin:$PATH"
       state: present
 
   - name: Install serverspec etc.
-    become_user: vagrant
+    become_user: "{{ __user_id }}"
     gem:
       name: "{{item}}"
       state: latest
       user_install: yes
     with_items:
       - rake
-      - bundle
       - serverspec
       - serverspec-runner
       - test-kitchen
       - kitchen-vagrant
       - kitchen-ansible
       - kitchen-docker
-      - bundler
-      - travis
+      - docker-api
 
   - name: Link to local playbook
     file:
       src: /vagrant/local-play
-      path: /home/vagrant/local-play
+      path: "{{__user_dir}}/local-play"
       state: link
+    when: __user_id == "vagrant"
 
   - name: Install required roles
-    command: ansible-galaxy install -r /home/vagrant/local-play/requirements.yml
+    command: ansible-galaxy install -r "{{__user_dir}}/local-play/requirements.yml"
+    when: __user_id == "vagrant"
 
   - name: Play local playbook
-    command: ansible-playbook -i /home/vagrant/local-play/inventory /home/vagrant/local-play/playbook.yml
+    command: ansible-playbook -i {{__user_dir}}/local-play/inventory {{__user_dir}}/local-play/playbook.yml
+    when: __user_id == "vagrant"

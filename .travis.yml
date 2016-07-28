@@ -1,5 +1,9 @@
 ---
 sudo: required
+dist: trusty
+language: ruby
+rvm:
+  - 2.2
 
 env:
 #  - distribution: centos
@@ -15,10 +19,10 @@ env:
     init: /lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     playbook: test.yml
-  - distribution: ubuntu
-    version: 14.04
-    init: /sbin/init
-    run_opts: ""
+#  - distribution: ubuntu
+#    version: 14.04
+#    init: /sbin/init
+#    run_opts: ""
 # Not Ending on travis
 #  - distribution: ubuntu
 #    version: 12.04
@@ -31,30 +35,42 @@ services:
 before_install:
   # Pull container
   - 'sudo docker pull ${distribution}:${version}'
+  - 'sudo docker pull owncloud/ubuntu:latest'
   # Customize container
   - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
+install:
+  # - sudo pip install ansible
+  #- export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
+  - gem install serverspec serverspec-runner rake docker-api
+
+before_script:
+  - serverspec-runner --help
+
 script:
-  - container_id=$(mktemp)
+  - ls -lisa tests
+  - cd tests/serverspec_test
+  - rake spec
+  #- container_id=$(mktemp)
   # Run container in detached state
-  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
+  #- 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
   # Install required Galaxy roles.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
   # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
   # Test if webserver is working.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost'
+  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
 
   # Some MySQL debugging (show all the logs).
-  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -lah /var/log
-  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql/error.log || true
-  - sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql.err || true
+  #- sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -lah /var/log
+  #- sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql/error.log || true
+  #- sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm cat /var/log/mysql.err || true
 
   # Check to make sure we can connect to MySQL via Unix socket.
   #- >
@@ -70,14 +86,14 @@ script:
   #  || (echo 'MySQL not running' && exit 1)
 
   # Test role idempotence.
-  - >
-    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
-    | tee idempotence.log
-    | grep 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
+  #- >
+  #  sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+  #  | tee idempotence.log
+  #  | grep 'changed=0.*failed=0'
+  #  && (echo 'Idempotence test: pass' && exit 0)
+  #  || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
   # Clean up
-  - 'sudo docker stop "$(cat ${container_id})"'
+  #- 'sudo docker stop "$(cat ${container_id})"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
