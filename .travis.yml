@@ -2,6 +2,8 @@
 sudo: required
 dist: trusty
 language: python
+rvm:
+  - 2.2
 
 env:
 #  - distribution: centos
@@ -41,6 +43,7 @@ before_install:
 
 install:
   # - sudo pip install ansible
+  - export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
   - gem install --user serverspec serverspec-runner rake docker-api
 
 before_script:
@@ -48,7 +51,6 @@ before_script:
   #- ansible --version
   #- ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
   #- tree ~/.gem
-  #- export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
   #- echo $PATH
   - serverspec-runner --help
 
