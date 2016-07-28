@@ -9,6 +9,12 @@
   #- name: Install requirements for role_under_test
   #  command: ansible-galaxy install -r /home/vagrant/role_under_test/tests/requirements.yml
 
+  - name: user vagrant in group docker
+    user:
+      append: yes
+      groups: docker
+      name: vagrant
+
   - name: Create link role_under_test
     file:
       src: /home/vagrant/role_under_test
@@ -30,6 +36,15 @@
       - bundle
       - bundler
       - travis
+
+  - name: Pull docker images
+    docker_image:
+      name: "{{item}}"
+
+    with_items:
+      - ubuntu:latest
+      - owncloud/ubuntu:latest
+
 
 #  - name: Git clone travis-build
 #    become_user: vagrant
