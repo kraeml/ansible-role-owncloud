@@ -49,7 +49,7 @@
   - name: Setup git/gem for user
     copy:
       src: "{{item}}"
-      dest: "/home/{{__user_id}}/.{{item}}"
+      dest: "{{__user_dir}}/.{{item}}"
       owner: "{{ __user_id }}"
       group: "{{ __user_id }}"
       mode: u=rw,g=rw,o=r
@@ -91,5 +91,5 @@
     when: __user_id == "vagrant"
 
   - name: Play local playbook
-    command: ansible-playbook -i {{__user_dir}}/local-play/inventory /home/{{__user_id}}/local-play/playbook.yml
+    command: ansible-playbook -i {{__user_dir}}/local-play/inventory {{__user_dir}}/local-play/playbook.yml
     when: __user_id == "vagrant"
