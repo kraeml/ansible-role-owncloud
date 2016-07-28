@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'serverspec'
 require 'docker'
 
-images=%w( ubuntu:16.04 owncloud/ubuntu:latest)
+images=%w( ubuntu:16.04 owncloud/ubuntu:latest )
 
 images.each do |image|
   describe image+" image" do
