@@ -40,15 +40,16 @@ before_install:
   # - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 install:
-  - sudo pip install ansible
+  # - sudo pip install ansible
+  - sudo gem install serverspec serverspec-runner rake docker-api
 
 before_script:
-  - id
-  - ansible --version
-  - ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
-  - tree ~/.gem
-  - export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
-  - echo $PATH
+  #- id
+  #- ansible --version
+  #- ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
+  #- tree ~/.gem
+  #- export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
+  #- echo $PATH
   - serverspec-runner --help
 
 script:
