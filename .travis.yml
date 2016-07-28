@@ -48,7 +48,7 @@ before_script:
   - serverspec-runner --help
 
 script:
-  - ls -lisa
+  - ls -lisa tests
   - cd tests/serverspec_test
   - rake spec
   #- container_id=$(mktemp)
