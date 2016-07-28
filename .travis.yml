@@ -1,7 +1,7 @@
 ---
 sudo: required
 dist: trusty
-language: python
+language: ruby
 rvm:
   - 2.2
 
@@ -43,8 +43,8 @@ before_install:
 
 install:
   # - sudo pip install ansible
-  - export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
-  - gem install --user serverspec serverspec-runner rake docker-api
+  #- export PATH=/home/travis/.gem/ruby/2.2.0/bin:$PATH
+  - gem install serverspec serverspec-runner rake docker-api
 
 before_script:
   #- id
