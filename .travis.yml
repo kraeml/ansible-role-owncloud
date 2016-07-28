@@ -31,21 +31,25 @@ services:
   - docker
 
 before_install:
+  - id
   # Install serverspec
   #- 'sudo gem install rake serverspec'
   # Pull container
-  - 'sudo docker pull ${distribution}:${version}'
+  # - 'sudo docker pull ${distribution}:${version}'
   # Customize container
-  - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
+  # - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 install:
   - sudo pip install ansible
 
 before_script:
+  - id
   - ansible --version
   - ansible-playbook -i vagrant/local-play/inventory vagrant/playbook.yml
+  - serverspec-runner --help
 
 script:
+  - id
   - container_id=$(mktemp)
   # Run container in detached state
   - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
