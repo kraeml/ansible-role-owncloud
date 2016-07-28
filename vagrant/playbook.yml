@@ -19,8 +19,8 @@
 
   - name: Set fact user
     set_fact:
-      __user_id: "{{ ansible_user_id }}"
-      __user_dir: "{{ ansible_user_dir }}"
+      __user_id: travis
+      __user_dir: /home/travis
     when: vagrant_id.rc != 0
 
   - debug: msg="__user_id has value {{ __user_id }}"
