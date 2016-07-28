@@ -48,13 +48,8 @@ before_script:
   - serverspec-runner --help
 
 script:
-  - cd tests
-  - >
-    serverspec-runner
-    | tee serverspec.log
-    | grep -q '0 failures'
-    && (echo 'Serverspec test: pass' && exit 0)
-    || (echo 'Serverspec test: fail' && exit 1)
+  - cd tests/serverspec_test
+  - rake spec
   #- container_id=$(mktemp)
   # Run container in detached state
   #- 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
