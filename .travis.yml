@@ -52,9 +52,9 @@ script:
   - >
     serverspec-runner
     | tee serverspec.log
-    | grep -q 'NG'
-    && (cat serverspec.log && echo 'Idempotence test: fail' && exit 1)
-    || (echo 'serverspec test: pass' && exit 0)
+    | grep -q '0 failures'
+    && (echo 'Serverspec test: pass' && exit 0)
+    || (echo 'Serverspec test: fail' && exit 1)
   #- container_id=$(mktemp)
   # Run container in detached state
   #- 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'

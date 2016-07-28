@@ -4,3 +4,4 @@ _platforms.yml
 .directory
 playbook.retry
 test.retry
+serverspec.log
