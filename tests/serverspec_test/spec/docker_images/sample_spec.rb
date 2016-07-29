@@ -13,3 +13,8 @@ images.each do |image|
     its(['Architecture']) { should eq 'amd64' }
   end
 end
+
+describe docker_container ENV['TARGET'] do
+  it { should exist }
+  it { should be_running }
+end
