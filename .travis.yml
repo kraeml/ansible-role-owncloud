@@ -48,13 +48,12 @@ before_script:
   - serverspec-runner --help
 
 script:
-  - ls -lisa tests
-  - cd tests/serverspec_test
-  - rake spec
-  #- container_id=$(mktemp)
+  - container_id=$(mktemp)
   # Run container in detached state
-  #- 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
+  - cd tests/serverspec_test
+  - TARGET="$(cat ${container_id})" rake spec
   # Install required Galaxy roles.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
