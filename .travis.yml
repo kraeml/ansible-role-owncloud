@@ -10,7 +10,7 @@ env:
 #    version: 6
 #    init: /sbin/init
 #    run_opts: ""
-  - distribution: owncloud/owncloud-base
+  - distribution: "owncloud/owncloud-base"
     version: latest
     init: /bin/bash
     run_opts: ""
