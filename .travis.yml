@@ -39,8 +39,6 @@ before_install:
 install:
   - gem install serverspec rake docker-api
 
-before_script:
-
 script:
   - container_id=$(mktemp)
   # Run container in detached state
@@ -85,8 +83,9 @@ script:
   #  | grep 'changed=0.*failed=0'
   #  && (echo 'Idempotence test: pass' && exit 0)
   #  || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
+  
   # Clean up
-  #- 'sudo docker stop "$(cat ${container_id})"'
+  - 'sudo docker stop "$(cat ${container_id})"'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
