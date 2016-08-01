@@ -17,7 +17,7 @@ env:
   - distribution: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: "--volume="${PWD}":/etc/ansible/roles/role_under_test:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    run_opts: '--volume="${PWD}":/etc/ansible/roles/role_under_test:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro'
     playbook: test.yml
 #  - distribution: ubuntu
 #    version: 14.04
