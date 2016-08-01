@@ -2,19 +2,15 @@ require 'spec_helper'
 require 'serverspec'
 require 'docker'
 
-images=%w( ubuntu:16.04 owncloud/ubuntu:latest ubuntu-16.04:ansible )
-
-images.each do |image|
-  describe docker_image(image) do
+describe docker_image ENV['TARGET_IMAGE'] do
     it { should exist }
-  end
-  describe docker_image image do
-    its(:inspection) { should_not include 'Architecture' => 'i386' }
-    its(['Architecture']) { should eq 'amd64' }
-  end
+end
+describe docker_image ENV['TARGET_IMAGE'] do
+  its(:inspection) { should_not include 'Architecture' => 'i386' }
+  its(['Architecture']) { should eq 'amd64' }
 end
 
-describe docker_container ENV['TARGET'] do
+describe docker_container ENV['TARGET_CONTAINER'] do
   it { should exist }
   it { should be_running }
 end
