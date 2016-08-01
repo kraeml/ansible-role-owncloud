@@ -34,6 +34,7 @@ services:
 
 before_install:
   # Customize container
+  # Dummy Dockerfile for owncloud-base
   - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 install:
@@ -83,7 +84,7 @@ script:
   #  | grep 'changed=0.*failed=0'
   #  && (echo 'Idempotence test: pass' && exit 0)
   #  || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
-  
+
   # Clean up
   - 'sudo docker stop "$(cat ${container_id})"'
 
