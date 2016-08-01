@@ -1,1 +1,1 @@
-FROM owncloud-base:latest
+FROM owncloud/owncloud-base:latest
