@@ -69,6 +69,9 @@ owc_folders = %w(
   /mnt/data
 )
 
+pem_file = "/etc/ssl/certs/ssl-cert.pem"
+key_file = "/etc/ssl/private/ssl-cert.key"
+
 describe ENV['TARGET_CONTAINER'] do
   before(:all) do
     @container = Docker::Container.get(ENV['TARGET_CONTAINER'])
@@ -133,17 +136,36 @@ describe ENV['TARGET_CONTAINER'] do
     end
   end
 
-  describe 'DocumentRoot on ssl' do
-    describe file('/etc/apache2/sites-enabled/'+site_ssl) do
-      its(:content) { should match /DocumentRoot\s+\/var\/www\/owncloud/ }
-    end
+  describe file(pem_file) do
+    it { should be_file }
+  end
+
+  describe file(key_file) do
+    it { should be_file }
   end
 
   describe 'DocumentRoot on ssl' do
+    describe file('/etc/apache2/sites-enabled/'+site_ssl) do
+      its(:content) { should match /DocumentRoot\s+\/var\/www\/owncloud/ }
+      its(:content) { should match /<IfModule mod_headers.c>\n\s+Header\s+always\s+set\s+Strict-Transport-Security\s+\"max-age=15768000;\s+includeSubDomains;\s+preload\"\n\s+<\/IfModule>/ }
+      its(:content) { should match pem_file }
+      its(:content) { should match key_file }
+    end
+  end
+
+  describe 'DocumentRoot without ssl' do
     describe file('/etc/apache2/sites-enabled/'+site) do
       its(:content) { should match /DocumentRoot\s+\/var\/www\/owncloud/ }
     end
   end
+
+  describe 'HOME should set to /var/www' do
+    describe file('/etc/apache2/envvars') do
+      its(:content) { should match /^unset\s+HOME\nexport\s+HOME=\/var\/www/ }
+    end
+  end
+
+
 
   after(:all) do
     set :backend, :exec
