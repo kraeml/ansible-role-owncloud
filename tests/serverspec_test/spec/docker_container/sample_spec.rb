@@ -37,6 +37,8 @@ owncloud_base_packages = %w(
   mysql-client
 )
 
+packages = owncloud_ubuntu_packages + owncloud_base_packages
+
 # Taken from https://github.com/owncloud-docker/owncloud-base/blob/master/Dockerfile
 # apache modules oc needs as documented
 enmods = %w(
@@ -52,7 +54,20 @@ ensites = %w(
   default-ssl
 )
 
-packages = owncloud_ubuntu_packages + owncloud_base_packages
+php_libsmbclients = %w(
+  /etc/php/7.0/cli/conf.d/*
+  /etc/php/7.0/apache2/conf.d/*
+)
+
+document_root = "/var/www/owncloud"
+site_ssl = "default-ssl.conf"
+site = "000-default.conf"
+
+owc_folders = %w(
+  /mnt/data/files
+  /mnt/data/config
+  /mnt/data
+)
 
 describe ENV['TARGET_CONTAINER'] do
   before(:all) do
@@ -78,9 +93,55 @@ describe ENV['TARGET_CONTAINER'] do
   end
 
   # No a2ensite -l works maybe only on ubuntu 16.04
-    describe command('ls -l /etc/apache2/sites-enabled/') do
+  describe command('ls -l /etc/apache2/sites-enabled/') do
     ensites.each do |ensite|
       its(:stdout) { should match ensite }
+    end
+  end
+
+  describe 'smbclient extension should enabled' do
+    php_libsmbclients.each do |php_libsmbclient|
+      describe command('grep -E ^extension=smbclient.so '+php_libsmbclient ) do
+        its(:exit_status) { should eq 0 }
+      end
+    end
+  end
+
+  describe 'user www-data should exist' do
+    describe user('www-data') do
+      it { should exist }
+      it { should have_login_shell '/bin/bash' }
+    end
+  end
+
+  # May a test for acces recursive
+  describe 'folders for owncloud files and config should exist' do
+    owc_folders.each do |folder|
+      describe file(folder) do
+        it { should be_directory }
+        it { should be_owned_by 'www-data' }
+        it { should be_writable.by('owner') }
+        it { should be_readable.by('owner') }
+        it { should be_executable.by('owner') }
+      end
+    end
+  end
+
+  describe 'owc source folder should be exist' do
+    describe file(document_root) do
+      it { should be_directory }
+    end
+  end
+
+  describe 'DocumentRoot should set on /var/www/owncloud on ssl' do
+    describe command('grep -e "DocumentRoot /var/www/owncloud" $(ls /etc/apache2/sites-enabled/* | grep ssl)') do
+      its(:exit_status) { should eq 0 }
+    end
+  end
+
+  describe 'DocumentRoot should set on /var/www/owncloud' do
+    describe command('grep -e "DocumentRoot /var/www/owncloud" $(ls /etc/apache2/sites-enabled/* | grep -v ssl)') do
+      its(:exit_status) { should eq 0 }
     end
   end
 
