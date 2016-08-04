@@ -33,7 +33,7 @@ install:
 script:
   - container_id=$(mktemp)
   # Run container in detached state
-  - 'sudo docker run --detach --volume="${PWD\}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
+  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
   - cd tests/serverspec_test
   - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${image}:${version} rake spec
