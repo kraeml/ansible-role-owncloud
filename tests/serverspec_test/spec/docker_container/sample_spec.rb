@@ -69,6 +69,11 @@ owc_folders = %w(
   /mnt/data
 )
 
+folders = Array.new
+
+folders.concat(owc_folders)
+folders.insert(-1,document_root)
+
 pem_file = "/etc/ssl/certs/ssl-cert.pem"
 key_file = "/etc/ssl/private/ssl-cert.key"
 
@@ -119,7 +124,7 @@ describe ENV['TARGET_CONTAINER'] do
 
   # May a test for acces recursive
   describe 'folders for owncloud files and config should exist' do
-    owc_folders.each do |folder|
+    folders.each do |folder|
       describe file(folder) do
         it { should be_directory }
         it { should be_owned_by 'www-data' }
@@ -127,12 +132,6 @@ describe ENV['TARGET_CONTAINER'] do
         it { should be_readable.by('owner') }
         it { should be_executable.by('owner') }
       end
-    end
-  end
-
-  describe 'owc source folder should be exist' do
-    describe file(document_root) do
-      it { should be_directory }
     end
   end
 
