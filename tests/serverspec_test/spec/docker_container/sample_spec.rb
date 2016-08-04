@@ -133,15 +133,15 @@ describe ENV['TARGET_CONTAINER'] do
     end
   end
 
-  describe 'DocumentRoot should set on /var/www/owncloud on ssl' do
-    describe command('grep -e "DocumentRoot /var/www/owncloud" $(ls /etc/apache2/sites-enabled/* | grep ssl)') do
-      its(:exit_status) { should eq 0 }
+  describe 'DocumentRoot on ssl' do
+    describe file('/etc/apache2/sites-enabled/'+site_ssl) do
+      its(:content) { should match /DocumentRoot\s+\/var\/www\/owncloud/ }
     end
   end
 
-  describe 'DocumentRoot should set on /var/www/owncloud' do
-    describe command('grep -e "DocumentRoot /var/www/owncloud" $(ls /etc/apache2/sites-enabled/* | grep -v ssl)') do
-      its(:exit_status) { should eq 0 }
+  describe 'DocumentRoot on ssl' do
+    describe file('/etc/apache2/sites-enabled/'+site) do
+      its(:content) { should match /DocumentRoot\s+\/var\/www\/owncloud/ }
     end
   end
 
