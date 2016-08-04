@@ -6,35 +6,25 @@ rvm:
   - 2.2
 
 env:
-#  - distribution: centos
-#    version: 6
-#    init: /sbin/init
-#    run_opts: ""
+# ToDo distribution dosn't work, because the slash
   - distribution: owncloud-base
+    image: owncloud/owncloud-base
     version: latest
     init: /bin/bash
     run_opts: ""
   - distribution: ubuntu
+    image: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: --volume="${PWD}":/etc/ansible/roles/role_under_test:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
+    run_opts: "--volume=\"\$\{PWD\}\":/etc/ansible/roles/role_under_test:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     playbook: test.yml
-#  - distribution: ubuntu
-#    version: 14.04
-#    init: /sbin/init
-#    run_opts: ""
-# Not Ending on travis
-#  - distribution: ubuntu
-#    version: 12.04
-#    init: /sbin/init
-#    run_opts: ""
 
 services:
   - docker
 
 before_install:
   # Customize container
-  # Dummy Dockerfile for owncloud-base
+  # Dummy Dockerfile for owncloud-base-latest
   - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 install:
@@ -46,7 +36,7 @@ script:
   - 'sudo docker run --detach ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
   - cd tests/serverspec_test
-  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${distribution}:${version} rake spec
+  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${image}:${version} rake spec
   # Install required Galaxy roles.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
