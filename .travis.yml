@@ -11,7 +11,7 @@ env:
     image: owncloud/owncloud-base
     version: latest
     init: /bin/bash
-    run_opts: ""
+    run_opts: "--interactive --tty"
   - distribution: ubuntu
     image: ubuntu
     version: 16.04
