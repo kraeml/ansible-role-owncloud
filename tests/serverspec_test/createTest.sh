@@ -12,7 +12,7 @@ docker build --rm=true --file=../Dockerfile.${distribution}-${version} --tag=${d
 
 echo
 echo "Running Testdummy"
-docker run -tdi --name testcontainer ${distribution}-${version}:ansible /bin/bash
+docker run --detach -ti --name testcontainer ${distribution}-${version}:ansible /bin/bash
 
 echo
 echo "Executing tests:"
@@ -21,3 +21,4 @@ TARGET_CONTAINER=testcontainer TARGET_IMAGE=${distribution}-${version}:ansible r
 echo
 echo "Cleaning up"
 docker rm -f testcontainer
+#docker rmi ${distribution}-${version}:ansible
