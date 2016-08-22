@@ -15,6 +15,18 @@
     state: present
     filename: owncloud
 
+- name: Install ubuntu-base
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items: "{{pkg_oc_ref_base}}"
+
+- name: Install owncloud dependencies
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items: "{{pkg_oc}}"
+
 - name: Install owncloud
   apt:
     name: owncloud

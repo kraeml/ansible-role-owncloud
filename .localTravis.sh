@@ -1,4 +1,9 @@
 #!/bin/bash
+echo
+echo "Cleaning up"
+docker rm -f testcontainer
+#docker rmi ${distribution}-${version}:ansible
+
 read -n1 -p "Test ownloud-server or ubuntu-16.04? [o,u]: " doit
 case $doit in
   o|O) distribution=owncloud && version=server;;
@@ -26,11 +31,13 @@ echo $?
 echo Test role.
 docker exec --tty testcontainer env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
 
-echo
-echo "Executing tests:"
-TARGET_CONTAINER=testcontainer TARGET_IMAGE=${distribution}-${version}:ansible rake spec
+#echo Sleep for a while
+#sleep 5
 
 echo
-echo "Cleaning up"
-docker rm -f testcontainer
-#docker rmi ${distribution}-${version}:ansible
+echo "Executing tests:"
+# ToDo This will run only in seperate test for ubuntu-16.04
+TARGET_IMAGE=${distribution}-${version}:ansible rake spec:docker_images
+TARGET_CONTAINER=testcontainer rake spec:docker_container
+
+cd -

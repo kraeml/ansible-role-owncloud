@@ -11,12 +11,12 @@ env:
     image: owncloud/owncloud
     version: server
     init: /bin/bash
-    run_opts: '--interactive --tty'
+    run_opts: '"--interactive --tty"'
   - distribution: ubuntu
     image: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: '--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    run_opts: '"--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"'
     playbook: test.yml
 
 services:
@@ -43,8 +43,12 @@ script:
   # Test role.
   - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
+  # Sleep for a while
+  sleep 5
+
   - cd tests/serverspec_test
-  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${distribution}-${version}:ansible rake spec
+  - TARGET_IMAGE=${distribution}-${version}:ansible rake spec:docker_images
+  - TARGET_CONTAINER="$(cat ${container_id})" rake spec:docker_container
 
   # Test if webserver is working.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
@@ -68,12 +72,12 @@ script:
   #  || (echo 'MySQL not running' && exit 1)
 
   # Test role idempotence.
-  #- >
-  #  sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
-  #  | tee idempotence.log
-  #  | grep 'changed=0.*failed=0'
-  #  && (echo 'Idempotence test: pass' && exit 0)
-  #  || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
+  - >
+    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+    | tee idempotence.log
+    | grep 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
 
   # Clean up
   - 'sudo docker stop "$(cat ${container_id})"'
