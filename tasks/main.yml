@@ -22,4 +22,3 @@
     update_cache: yes
   notify:
     - apache_restart
-    - mysql_running
