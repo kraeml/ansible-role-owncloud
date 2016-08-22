@@ -1,0 +1,12 @@
+---
+# defaults file for owncloud
+pkg_owc_ref_base:
+  - apt-utils
+  - apt-transport-https
+  - iputils-ping
+  - wget
+  - curl
+  - bzip2
+  - unzip
+  - cron
+  - vim

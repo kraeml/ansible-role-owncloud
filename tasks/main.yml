@@ -1,0 +1,25 @@
+---
+# Include variables and define needed variables.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_distribution_release }}.yml"
+
+- name: Get owncloud key
+  apt_key:
+    url: "{{ key }}"
+    state: present
+
+- name: Get owncloud repositories
+  apt_repository:
+    repo: '{{ deb }}'
+    update_cache: yes
+    state: present
+    filename: owncloud
+
+- name: Install owncloud
+  apt:
+    name: owncloud
+    state: latest
+    update_cache: yes
+  notify:
+    - apache_restart
+    - mysql_running

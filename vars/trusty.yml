@@ -1,0 +1,4 @@
+---
+# vars file for owncloud
+key: 'http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/Release.key'
+deb: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_14.04/ /'
