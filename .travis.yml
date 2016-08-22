@@ -7,9 +7,9 @@ rvm:
 
 env:
 # ToDo distribution dosn't work, because the slash
-  - distribution: owncloud-base
-    image: owncloud/owncloud-base
-    version: latest
+  - distribution: owncloud
+    image: owncloud/owncloud
+    version: server
     init: /bin/bash
     run_opts: "--interactive --tty"
   - distribution: ubuntu
