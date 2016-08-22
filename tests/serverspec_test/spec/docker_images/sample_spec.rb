@@ -2,16 +2,15 @@ require 'spec_helper'
 require 'serverspec'
 require 'docker'
 
-images=%w( ubuntu:16.04 owncloud/ubuntu:latest )
+describe docker_image ENV['TARGET_IMAGE'] do
+    it { should exist }
+end
+describe docker_image ENV['TARGET_IMAGE'] do
+  its(:inspection) { should_not include 'Architecture' => 'i386' }
+  its(['Architecture']) { should eq 'amd64' }
+end
 
-images.each do |image|
-  describe image+" image" do
-      before(:all) {
-          @image = Docker::Image.all().detect{|i| i.info['RepoTags'] == [image]}
-      }
-
-      it "should be availble" do
-          expect(@image).to_not be_nil
-      end
-  end
+describe docker_container ENV['TARGET_CONTAINER'] do
+  it { should exist }
+  it { should be_running }
 end
