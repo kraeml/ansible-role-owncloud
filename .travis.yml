@@ -11,12 +11,12 @@ env:
     image: owncloud/owncloud
     version: server
     init: /bin/bash
-    run_opts: "--interactive --tty"
+    run_opts: \"--interactive --tty\"
   - distribution: ubuntu
     image: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    run_opts: \"--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro\"
     playbook: test.yml
 
 services:
@@ -38,14 +38,14 @@ script:
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+  - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
   # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+  - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
   - cd tests/serverspec_test
   - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${distribution}-${version}:ansible rake spec
-  
+
   # Test if webserver is working.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
 
