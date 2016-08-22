@@ -24,7 +24,6 @@ services:
 
 before_install:
   # Customize container
-  # Dummy Dockerfile for owncloud-base-latest
   - 'sudo docker build --rm=true --file=tests/Dockerfile.${distribution}-${version} --tag=${distribution}-${version}:ansible tests'
 
 install:
@@ -36,7 +35,7 @@ script:
   - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
   - cd tests/serverspec_test
-  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${image}:${version} rake spec
+  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${distribution}-${version}:ansible rake spec
   # Install required Galaxy roles.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
