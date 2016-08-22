@@ -11,12 +11,12 @@ env:
     image: owncloud/owncloud
     version: server
     init: /bin/bash
-    run_opts: \"--interactive --tty\"
+    run_opts: '--interactive --tty'
   - distribution: ubuntu
     image: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: \"--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro\"
+    run_opts: '--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro'
     playbook: test.yml
 
 services:
