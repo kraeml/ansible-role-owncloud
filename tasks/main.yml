@@ -40,3 +40,20 @@
     state: present
     name: "{{item}}"
   with_items: "{{a2enmod}}"
+
+# ToDo: Make this command idempotence
+- name: enables default-ssl
+  command: a2ensite default-ssl
+
+- name: enambles smbclient extension
+  lineinfile:
+    dest: "{{item}}"
+    regexp: '^extension=smbclient.so'
+    line: extension=smbclient.so
+    create: yes
+  with_items: "{{php_libsmbclients}}"
+
+- name: Change shell for www-data
+  user:
+    name: www-data
+    shell: /bin/bash

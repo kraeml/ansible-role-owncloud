@@ -38,3 +38,7 @@ a2enmod:
   - dir
   - mime
   - ssl
+
+php_libsmbclients:
+  - /etc/php/7.0/cli/conf.d/20-smbclient.ini
+  - /etc/php/7.0/apache2/conf.d/20-smbclient.ini
