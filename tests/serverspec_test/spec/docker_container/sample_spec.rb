@@ -63,7 +63,7 @@ document_root = "/var/www/owncloud"
 site_ssl = "default-ssl.conf"
 site = "000-default.conf"
 
-owc_folders = %w(
+oc_folders = %w(
   /mnt/data/files
   /mnt/data/config
   /mnt/data
@@ -71,7 +71,7 @@ owc_folders = %w(
 
 folders = Array.new
 
-folders.concat(owc_folders)
+folders.concat(oc_folders)
 folders.insert(-1,document_root)
 
 pem_file = "/etc/ssl/certs/ssl-cert.pem"
