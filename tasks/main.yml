@@ -15,6 +15,18 @@
     state: present
     filename: owncloud
 
+- name: Install ubuntu-base
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items: "{{pkg_oc_ref_base}}"
+
+- name: Install owncloud dependencies
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items: "{{pkg_oc}}"
+
 - name: Install owncloud
   apt:
     name: owncloud
@@ -22,4 +34,108 @@
     update_cache: yes
   notify:
     - apache_restart
-    - mysql_running
+
+- name: enables the Apache2 module
+  apache2_module:
+    state: present
+    name: "{{item}}"
+  with_items: "{{a2enmod}}"
+  notify:
+    - apache_restart
+
+- name: enables default-ssl
+  command: a2ensite default-ssl
+  args:
+    creates: /etc/apache2/sites-enabled/default-ssl.conf
+  notify:
+    - apache_restart
+
+- name: enambles smbclient extension
+  lineinfile:
+    dest: "{{item}}"
+    regexp: '^extension=smbclient.so'
+    line: extension=smbclient.so
+    create: yes
+  with_items: "{{php_libsmbclients}}"
+
+- name: Change shell for www-data
+  user:
+    name: www-data
+    shell: /bin/bash
+
+- name: owncloud data directories
+  file:
+    path: "{{item}}"
+    owner: www-data
+    group: www-data
+    state: directory
+  with_items: "{{oc_folders}}"
+
+- name: /var/www/owncloud owned by www-data
+  file:
+    path: /var/www/owncloud
+    owner: www-data
+    group: www-data
+    state: directory
+
+- name: Move snakeoil.pem
+  command: mv /etc/ssl/certs/ssl-cert-snakeoil.pem "{{pem_file}}"
+  args:
+    creates: "{{pem_file}}"
+  notify:
+    - apache_restart
+
+- name: Move snakeoil.key
+  command: mv /etc/ssl/private/ssl-cert-snakeoil.key "{{key_file}}"
+  args:
+    creates: "{{key_file}}"
+  notify:
+    - apache_restart
+
+# ToDo: Change only with validate
+- name: Remove snakeoil in apache conf
+  replace:
+    dest: /etc/apache2/sites-enabled/default-ssl.conf
+    regexp: 'ssl-cert-snakeoil'
+    replace: 'ssl-cert'
+    follow: yes
+  notify:
+    - apache_restart
+
+# ToDo: Change only with validate
+- name: Set document_root to owncloud
+  replace:
+    dest: "{{item}}"
+    regexp: 'DocumentRoot /var/www/html'
+    replace: 'DocumentRoot /var/www/owncloud'
+    follow: yes
+  with_items: "{{document_root}}"
+  notify:
+    - apache_restart
+
+- command: grep  mod_headers  /etc/apache2/sites-enabled/default-ssl.conf
+  register: mod_headers
+  ignore_errors: True
+  changed_when: False
+
+- name: Set headers
+  replace:
+    dest: /etc/apache2/sites-enabled/default-ssl.conf
+    regexp: '</VirtualHost>'
+    replace: '\t<IfModule mod_headers.c>\n\t\t\tHeader always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"\n\t\t</IfModule>\n\t</VirtualHost>'
+    follow: yes
+  when: mod_headers|failed
+
+- command: grep HOME=/var/www /etc/apache2/envvars
+  register: envvars_home
+  ignore_errors: True
+  changed_when: False
+
+- name: Change home in envvars
+  replace:
+    dest: /etc/apache2/envvars
+    regexp: 'unset HOME'
+    replace: 'unset HOME\nexport HOME=/var/www'
+  when: envvars_home|failed
+  notify:
+    - apache_restart

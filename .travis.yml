@@ -11,12 +11,12 @@ env:
     image: owncloud/owncloud
     version: server
     init: /bin/bash
-    run_opts: "--interactive --tty"
+    run_opts: '"--interactive --tty"'
   - distribution: ubuntu
     image: ubuntu
     version: 16.04
     init: /lib/systemd/systemd
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    run_opts: '"--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"'
     playbook: test.yml
 
 services:
@@ -34,19 +34,21 @@ script:
   # Run container in detached state
   - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ${distribution}-${version}:ansible "${init}" > "${container_id}"'
 
-  - cd tests/serverspec_test
-  - TARGET_CONTAINER="$(cat ${container_id})" TARGET_IMAGE=${distribution}-${version}:ansible rake spec
   # Install required Galaxy roles.
   # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
   # Ansible syntax check.
-  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
+  - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
   # Test role.
-  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+  - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+
+  - cd tests/serverspec_test
+  - TARGET_IMAGE=${distribution}-${version}:ansible rake spec:docker_images
+  - TARGET_CONTAINER="$(cat ${container_id})" rake spec:docker_container
 
   # Test if webserver is working.
-  #- 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
+  # - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl localhost/owncloud'
 
   # Some MySQL debugging (show all the logs).
   #- sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -lah /var/log
@@ -67,12 +69,12 @@ script:
   #  || (echo 'MySQL not running' && exit 1)
 
   # Test role idempotence.
-  #- >
-  #  sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
-  #  | tee idempotence.log
-  #  | grep 'changed=0.*failed=0'
-  #  && (echo 'Idempotence test: pass' && exit 0)
-  #  || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
+  - >
+    test -z $playbook || sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+    | tee idempotence.log
+    | grep 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (cat idempotence.log && echo 'Idempotence test: fail' && exit 1)
 
   # Clean up
   - 'sudo docker stop "$(cat ${container_id})"'

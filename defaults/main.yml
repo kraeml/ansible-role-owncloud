@@ -1,6 +1,6 @@
 ---
 # defaults file for owncloud
-pkg_owc_ref_base:
+pkg_oc_ref_base:
   - apt-utils
   - apt-transport-https
   - iputils-ping
@@ -10,3 +10,47 @@ pkg_owc_ref_base:
   - unzip
   - cron
   - vim
+
+pkg_oc:
+  - apache2
+  - libapache2-mod-php7.0
+  - php7.0-gd
+  - php7.0-json
+  - php7.0-mysql
+  - php7.0-curl
+  - php7.0-intl
+  - php7.0-mcrypt
+  - php-imagick
+  - php7.0-zip
+  - php7.0-xml
+  - php7.0-mbstring
+  - php-ldap
+  - php-apcu
+  - php-redis
+  - smbclient
+  - php-smbclient
+  - mysql-client
+
+a2enmod:
+  - rewrite
+  - headers
+  - env
+  - dir
+  - mime
+  - ssl
+
+php_libsmbclients:
+  - /etc/php/7.0/cli/conf.d/20-smbclient.ini
+  - /etc/php/7.0/apache2/conf.d/20-smbclient.ini
+
+oc_folders:
+  - /mnt/data
+  - /mnt/data/files
+  - /mnt/data/config
+
+pem_file: "/etc/ssl/certs/ssl-cert.pem"
+key_file: "/etc/ssl/private/ssl-cert.key"
+
+document_root:
+  - /etc/apache2/sites-enabled/default-ssl.conf
+  - /etc/apache2/sites-enabled/000-default.conf
