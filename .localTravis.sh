@@ -6,7 +6,7 @@ docker rm -f testcontainer
 
 read -n1 -p "Test ownloud-server or ubuntu-16.04? [o,u]: " doit
 case $doit in
-  o|O) distribution=owncloud && version=server;;
+  o|O) distribution=owncloud && version=server && run_opts="--interactive --tty" && init=/bin/bash;;
   u|U) distribution=ubuntu && version=16.04 && run_opts="--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro" && init=/lib/systemd/systemd;;
   *) echo dont know ;;
 esac

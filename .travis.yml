@@ -43,9 +43,6 @@ script:
   # Test role.
   - 'test -z $playbook || sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
 
-  # Sleep for a while
-  sleep 5
-
   - cd tests/serverspec_test
   - TARGET_IMAGE=${distribution}-${version}:ansible rake spec:docker_images
   - TARGET_CONTAINER="$(cat ${container_id})" rake spec:docker_container
