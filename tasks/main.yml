@@ -43,9 +43,10 @@
   notify:
     - apache_restart
 
-# ToDo: Make this command idempotence
 - name: enables default-ssl
   command: a2ensite default-ssl
+  args:
+    creates: /etc/apache2/sites-enabled/default-ssl.conf
   notify:
     - apache_restart
 
