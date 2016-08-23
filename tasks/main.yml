@@ -57,3 +57,28 @@
   user:
     name: www-data
     shell: /bin/bash
+
+- name: owncloud data directories
+  file:
+    path: "{{item}}"
+    owner: www-data
+    group: www-data
+    state: directory
+  with_items: "{{oc_folders}}"
+
+- name: /var/www/owncloud owned by www-data
+  file:
+    path: /var/www/owncloud
+    owner: www-data
+    group: www-data
+    state: directory
+
+- name: Move snakeoil.pem
+  command: mv /etc/ssl/certs/ssl-cert-snakeoil.pem "{{pem_file}}"
+  args:
+    creates: "{{pem_file}}"
+
+- name: Move snakeoil.key
+  command: mv /etc/ssl/private/ssl-cert-snakeoil.key "{{key_file}}"
+  args:
+    creates: "{{key_file}}"

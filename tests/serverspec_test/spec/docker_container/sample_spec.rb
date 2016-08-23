@@ -69,11 +69,12 @@ oc_folders = %w(
   /mnt/data
 )
 
+#All oc folders
 folders = Array.new
-
 folders.concat(oc_folders)
 folders.insert(-1,document_root)
 
+# SSL files
 pem_file = "/etc/ssl/certs/ssl-cert.pem"
 key_file = "/etc/ssl/private/ssl-cert.key"
 

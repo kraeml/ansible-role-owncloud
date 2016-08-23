@@ -42,3 +42,11 @@ a2enmod:
 php_libsmbclients:
   - /etc/php/7.0/cli/conf.d/20-smbclient.ini
   - /etc/php/7.0/apache2/conf.d/20-smbclient.ini
+
+oc_folders:
+  - /mnt/data
+  - /mnt/data/files
+  - /mnt/data/config
+
+pem_file: "/etc/ssl/certs/ssl-cert.pem"
+key_file: "/etc/ssl/private/ssl-cert.key"
