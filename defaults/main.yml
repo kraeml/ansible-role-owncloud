@@ -50,3 +50,7 @@ oc_folders:
 
 pem_file: "/etc/ssl/certs/ssl-cert.pem"
 key_file: "/etc/ssl/private/ssl-cert.key"
+
+document_root:
+  - /etc/apache2/sites-enabled/default-ssl.conf
+  - /etc/apache2/sites-enabled/000-default.conf

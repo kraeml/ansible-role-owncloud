@@ -82,3 +82,10 @@
   command: mv /etc/ssl/private/ssl-cert-snakeoil.key "{{key_file}}"
   args:
     creates: "{{key_file}}"
+
+- name: Set document_root to owncloud
+  lineinfile:
+    dest: "{{item}}"
+    regexp: 'DocumentRoot /var/www/html'
+    line: DocumentRoot /var/www/owncloud
+  with_items: "{{document_root}}"
