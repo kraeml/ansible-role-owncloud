@@ -1,4 +1,5 @@
 ---
 # vars file for owncloud
+# ToDo key from GPG 
 key: 'https://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/Release.key'
 deb: 'deb http://download.owncloud.org/download/repositories/stable/Ubuntu_16.04/ /'
