@@ -111,3 +111,16 @@
   with_items: "{{document_root}}"
   notify:
     - apache_restart
+
+- command: grep  mod_headers  /etc/apache2/sites-enabled/default-ssl.conf
+  register: mod_headers
+  ignore_errors: True
+  changed_when: False
+
+- name: Set headers
+  replace:
+    dest: /etc/apache2/sites-enabled/default-ssl.conf
+    regexp: '</VirtualHost>'
+    replace: '\t<IfModule mod_headers.c>\n\t\t\tHeader always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"\n\t\t</IfModule>\n\t</VirtualHost>'
+    follow: yes
+  when: mod_headers|failed
