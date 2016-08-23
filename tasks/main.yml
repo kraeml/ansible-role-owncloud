@@ -124,3 +124,17 @@
     replace: '\t<IfModule mod_headers.c>\n\t\t\tHeader always set Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"\n\t\t</IfModule>\n\t</VirtualHost>'
     follow: yes
   when: mod_headers|failed
+
+- command: grep HOME=/var/www /etc/apache2/envvars
+  register: envvars_home
+  ignore_errors: True
+  changed_when: False
+
+- name: Change home in envvars
+  replace:
+    dest: /etc/apache2/envvars
+    regexp: 'unset HOME'
+    replace: 'unset HOME\nexport HOME=/var/www'
+  when: envvars_home|failed
+  notify:
+    - apache_restart
