@@ -30,3 +30,11 @@ pkg_oc:
   - smbclient
   - php-smbclient
   - mysql-client
+
+a2enmod:
+  - rewrite
+  - headers
+  - env
+  - dir
+  - mime
+  - ssl

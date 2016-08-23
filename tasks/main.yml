@@ -34,3 +34,9 @@
     update_cache: yes
   notify:
     - apache_restart
+
+- name: enables the Apache2 module
+  apache2_module:
+    state: present
+    name: "{{item}}"
+  with_items: "{{a2enmod}}"
