@@ -1,7 +1,7 @@
 #!/bin/bash
 echo
 echo "Cleaning up"
-#docker rm -f testcontainer
+docker rm -f testcontainer
 #docker rmi ${distribution}-${version}:ansible
 
 read -n1 -p "Test ownloud-server or ubuntu-16.04? [o,u]: " doit
